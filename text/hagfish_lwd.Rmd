@@ -3,7 +3,7 @@ title: "Hagfish length, weight, diameter relationships"
 author: "Ben Williams"
 date: "January 17, 2019"
 output:
-  bookdown::html_document2: 
+  bookdown::pdf_document2: 
   fig_caption: true
 ---
 
@@ -64,14 +64,17 @@ Generalized additive models and generalized linear models with and without inter
 ```{r, echo = T}
 gam_l <- gam(diameter ~ s(length, k=4), data = hag, gamma = 1.4, method='ML')
 gam_w <- gam(diameter ~ s(weight, k=4), data = hag, gamma = 1.4, method='ML')
-gam_lw <- gam(diameter ~ s(length, k=4) + s(weight, k=4), data = hag, gamma = 1.4, method='ML')
-gam_llw <- gam(diameter ~ s(length, k=4) + s(weight, k=4), data = hag, gamma = 1.4, method='ML', family = gaussian(link = 'log'))
+gam_lw <- gam(diameter ~ s(length, k=4) + s(weight, k=4), data = hag, 
+              gamma = 1.4, method='ML')
+gam_llw <- gam(diameter ~ s(length, k=4) + s(weight, k=4), data = hag, 
+               gamma = 1.4, method='ML', family = gaussian(link = 'log'))
 
 
 glm_l <- glm(diameter ~ length, data = hag)
 glm_w <- glm(diameter ~ weight, data = hag)
 glm_lw <- glm(diameter ~ length * weight, data = hag)
-glm_llw <- glm(diameter ~ length * weight, data = hag, family = gaussian(link = 'log'))
+glm_llw <- glm(diameter ~ length * weight, data = hag, 
+               family = gaussian(link = 'log'))
 ```
 
 AIC was used to test for the top model.
@@ -143,7 +146,8 @@ The coefficent estimates can now be used as predictors for future samples
 length = seq(20, 60, by = 5)
 weight = seq(50, 450, by = 50)
 
-coef(glm_lw)[[1]] + coef(glm_lw)[[2]] * length + coef(glm_lw)[[3]] * weight + coef(glm_lw)[[4]] * length * weight
+coef(glm_lw)[[1]] + coef(glm_lw)[[2]] * length + coef(glm_lw)[[3]] * weight + 
+  coef(glm_lw)[[4]] * length * weight
 ```
 
 In short it appears that you should be able to use length/weight to get a reasonable estimate of diameter. 
